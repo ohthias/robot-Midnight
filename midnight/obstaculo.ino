@@ -1,4 +1,10 @@
-void obstaculo() {
+float lerDistancia() {
+  float leitura = sensorDistancia.getDistance();
+  distanciaFiltrada = 0.7*distanciaFiltrada+0.3*leitura;
+  return distanciaFiltrada;
+}
+
+void desvioObstaculo() {
   andar("R", 80);
   delay(500);
   curvaNoventa("D", velocidadeCurvas, velocidadeCurvasRe);

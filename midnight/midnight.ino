@@ -1,4 +1,10 @@
-#include <Wire.h>
+/**
+  * Robô Midnight - Base para OBR
+  * Desenvolvido por: Matheus Gabriel Santos Silva (@ohthias)
+  * Data: 2026-03
+  * Este código é a base para um robÔ projetado para competições de robótica como a OBR na modalidade de resgate. Ele inclui funcionalidades para seguir linhas, detectar cores e desviar de obstáculos usando sensores TCS34725, TCRT5000 e um sensor de distância Sharp IR.
+  */
+
 #include <Adafruit_TCS34725.h>
 #include <SharpIR.h>
 
@@ -30,9 +36,18 @@ int velocidadeCurvasRe = 220;
 
 // SHARP
 SharpIR sensorDistancia(SharpIR::GP2Y0A41SK0F, A0);
+float distanciaFiltrada = 0;
 
 // Calibração
 int valorPreto = 200;
+
+// Rotinas
+enum rotinas {
+  LINHA,
+  OBSTACULO,
+  RESGATE
+};
+rotinas estadoAtual = LINHA;
 
 void setup() {
   pinMode(motorDireitaFrente, OUTPUT);
@@ -51,18 +66,29 @@ void setup() {
   
   canalSensor(1);
   if (!sensorCorDireita.begin()) {
-      Serial.println("Sensor no canal 0 não detectado!");
+      Serial.println("Sensor no canal 1 não detectado!");
   } else {
-      Serial.println("Sensor no canal 0 pronto!");
+      Serial.println("Sensor no canal 1 pronto!");
   }
   
 }
 
 void loop() {
-  bool obstaculoIdentificado = sensorDistancia.getDistance() <= 10;
-  if(!obstaculoIdentificado) {
-    segueLinha();
-  } else {
-    obstaculo();
+  lerDistancia();
+  switch(estadoAtual) {
+    case LINHA:
+      if(distanciaFiltrada <= 10) {
+        estadoAtual = OBSTACULO;
+        break;
+      }
+      segueLinha();
+      break;
+    case OBSTACULO:
+      desvioObstaculo();
+      estadoAtual = LINHA;
+      break;
+    case RESGATE:
+      realizarResgate();
+      break;
   }
 }

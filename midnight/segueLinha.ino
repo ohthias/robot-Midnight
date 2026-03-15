@@ -1,3 +1,13 @@
+/**
+ * @brief Função para identificar o caso atual dos sensores de linha e tomar decisões de movimento com base nisso.
+ *
+ * Os sensores de linha são lidos e convertidos em uma string binária de 5 caracteres, onde cada caractere
+ * representa o estado (1 para linha detectada, 0 para linha não detectada) de um sensor específico. Com base nessa
+ * string, o robô decide se deve seguir em frente, fazer uma curva para a direita ou esquerda, ou detectar a cor do
+ * piso.
+ *
+ * @return String representando o caso identificado pelos sensores de linha.
+ */
 String casos() {
   int valorSensorExtEsq = analogRead(sensorExtEsq) <= valorPreto ? 1 : 0;
   int valorSensorEsq = analogRead(sensorEsq) <= valorPreto ? 1 : 0;

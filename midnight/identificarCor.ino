@@ -77,7 +77,7 @@ void detectaCor() {
   } else if(corDetectadaEsquerda == "VERMELHO" && corDetectadaDireita == "VERMELHO") {
     andar("", 0);
   } else if(corDetectadaEsquerda == "PRATA" && corDetectadaDireita == "PRATA") {
-    // Resgate
+    estadoAtual = RESGATE;
   } else {
     andar("F", 100);
     delay(500);
